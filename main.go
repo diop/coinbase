@@ -8,6 +8,12 @@ import (
 	"net/http"
 )
 
+type Price struct {
+	Base     string `json:base`
+	Currency string `json:currency`
+	Amount   string `json:amount`
+}
+
 func main() {
 	response, err := http.Get("https://api.coinbase.com/v2/prices/spot?currency=USD")
 	if err != nil {
@@ -15,6 +21,14 @@ func main() {
 	} else {
 		data, _ := ioutil.ReadAll(response.Body)
 		fmt.Println(string(data))
+		prices := Price{}
+
+		err := json.Unmarshal(data, &prices)
+		if err != nil {
+			panic(err)
+		}
+		// output := c.JSON(http.StatusOK, prices)
+		fmt.Println(prices)
 	}
 
 	jsonData := map[string]string{"firstName": "Fode", "LastName": "Diop"}
